@@ -175,10 +175,7 @@ html[dir="rtl"] .top{ flex-direction:row-reverse; }
 
 <script>
 /* ========= CONFIG ========= */
-/* ✅ حط الرابط ديالك هنا (ضروري) */
-const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzzcEKWhPkurMCgn4M5mgJZq_epvrgG0xt2JvVYj1Ncpul-onSzOZRN_Inl9oLp8P07/exec";
-
-/* ✅ rate: 1$ = 10 MAD (بدّلها كيف بغيتي) */
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzkASSeF6NNJ6-kPgZTSGVPgnz4XUkkKrF73zw1Yq-CoHaOQBrTKyudm243QdJ4lR1i/exec";
 const USD_TO_MAD = 10;
 
 /* ========= I18N ========= */
@@ -311,13 +308,6 @@ btn.addEventListener("click", async () => {
     return;
   }
 
-  if(!SHEET_WEBAPP_URL || SHEET_WEBAPP_URL.includes("PASTE_YOUR_EXEC_LINK_HERE")){
-    setStatus(lang==="ar" ? "❌ حط رابط WebApp ديال Google Script فـ SHEET_WEBAPP_URL." :
-              lang==="fr" ? "❌ Ajoutez le lien WebApp dans SHEET_WEBAPP_URL." :
-              "❌ Please paste your WebApp URL in SHEET_WEBAPP_URL.");
-    return;
-  }
-
   btn.disabled = true;
   setStatus(tr.sending);
 
@@ -330,18 +320,13 @@ btn.addEventListener("click", async () => {
     name,
     phone,
     city,
-    note
+    note,
+    source: "github-pages"
   };
 
   try{
-    const out = await sendToSheet(payload);
-    if(out && out.ok){
-      setStatus(tr.ok);
-      // اختيارياً: تمسح الخانات
-      // document.getElementById("note").value = "";
-    } else {
-      throw new Error("Unknown");
-    }
+    await sendToSheet(payload);
+    setStatus(tr.ok);
   }catch(e){
     setStatus(tr.fail(e.message));
     btn.disabled = false;
