@@ -1,117 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Checkout • PARASITE</title>
 
 <style>
-body{
-background:black;
-color:white;
-font-family:Arial;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+:root{
+  --bg:#050505;
+  --card:#0f0f0f;
+  --text:#f2f2f2;
+  --muted:#bdbdbd;
+  --blood:#ff1a1a;
+  --line:rgba(255,255,255,0.12);
 }
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* animated red/black background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-240px;
+  background:
+    radial-gradient(700px 480px at 20% 15%, rgba(255,26,26,0.22), transparent 60%),
+    radial-gradient(650px 420px at 80% 25%, rgba(255,26,26,0.16), transparent 58%),
+    radial-gradient(900px 700px at 45% 80%, rgba(255,255,255,0.04), transparent 65%);
+  animation: movebg 12s ease-in-out infinite alternate;
+  z-index:-2;
+}
+@keyframes movebg{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-120px,-90px)}
+}
+
+/* noise overlay */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+  opacity:.30;
+  z-index:-1;
+}
+
+.container{
+  width:min(880px, 92vw);
+  margin:0 auto;
+  padding:24px 0 46px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:10px;
+}
+a{ color:var(--muted); text-decoration:none; }
+a:hover{ color:var(--text); }
 
 .card{
-background:#111;
-padding:30px;
-border-radius:10px;
-width:350px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(15,15,15,0.78);
+  backdrop-filter: blur(6px);
+  padding:18px;
 }
 
+h1{ margin:0 0 6px; font-size:28px; letter-spacing:1px; }
+.small{ color:var(--muted); font-size:13px; line-height:1.6; margin:0; }
+.price{ margin-top:8px; font-weight:900; font-size:16px; }
+
+.grid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+@media(max-width:720px){ .grid{grid-template-columns:1fr;} }
+
+label{
+  display:block;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12px;
+}
 input,select{
-width:100%;
-padding:10px;
-margin-top:10px;
-background:#222;
-border:none;
-color:white;
+  width:100%;
+  margin-top:6px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#0b0b0b;
+  color:var(--text);
+  font-size:13px;
+  outline:none;
+}
+input:focus,select:focus{
+  border-color:rgba(255,26,26,0.45);
+  box-shadow:0 0 0 3px rgba(255,26,26,0.10);
 }
 
-button{
-margin-top:15px;
-width:100%;
-padding:12px;
-background:red;
-border:none;
-color:white;
-font-weight:bold;
-cursor:pointer;
+.btn{
+  width:100%;
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,26,26,0.55);
+  background:rgba(255,26,26,0.16);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+}
+.btn:hover{ background:rgba(255,26,26,0.30); }
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+.msg{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--muted);
 }
 
-button:hover{
-background:#ff2020;
-}
+/* RTL */
+html[dir="rtl"] body{ direction:rtl; }
+html[dir="rtl"] .top{ flex-direction:row-reverse; }
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<div class="card">
+  <div class="top">
+    <div id="langLabel">Lang: EN</div>
+    <a id="backLink" href="index.html">← Back</a>
+  </div>
 
-<h2>Checkout</h2>
+  <div class="card">
+    <h1 id="title">Checkout</h1>
+    <p class="small" id="productLine"></p>
+    <div class="price" id="priceLine"></div>
 
-<input id="name" placeholder="Full name">
-<input id="phone" placeholder="Phone">
-<input id="city" placeholder="City">
+    <div class="grid">
+      <div>
+        <label id="lblName">Full name</label>
+        <input id="name" placeholder="Your name" autocomplete="name">
+      </div>
+      <div>
+        <label id="lblPhone">Phone</label>
+        <input id="phone" placeholder="+212..." autocomplete="tel">
+      </div>
+      <div>
+        <label id="lblCity">City</label>
+        <input id="city" placeholder="Casablanca...">
+      </div>
+      <div>
+        <label id="lblSize">Size</label>
+        <select id="size">
+          <option value="S">S</option>
+          <option value="M" selected>M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+      </div>
+    </div>
 
-<select id="size">
-<option>S</option>
-<option>M</option>
-<option>L</option>
-<option>XL</option>
-</select>
+    <label id="lblNote">Note (optional)</label>
+    <input id="note" placeholder="Color / delivery notes...">
 
-<input id="note" placeholder="Note (optional)">
-
-<button onclick="sendOrder()">Confirm Order</button>
-
-<p id="msg"></p>
-
+    <button class="btn" id="confirmBtn" type="button">Confirm Order</button>
+    <div class="msg" id="msg"></div>
+  </div>
 </div>
 
 <script>
-
+/* ====== IMPORTANT: YOUR WEBAPP URL ====== */
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwv0WXKwxy4tUYtpz0ymVYXDt4y3Mqekkue2ygq8EJhDqRMBC6qM37xNvg9YPj7v71t/exec";
 
-function sendOrder(){
+/* ====== PRICE RULE ====== */
+const USD_TO_MAD = 10;
 
-let name=document.getElementById("name").value
-let phone=document.getElementById("phone").value
-let city=document.getElementById("city").value
-let size=document.getElementById("size").value
-let note=document.getElementById("note").value
+/* ====== TRANSLATIONS ====== */
+const T = {
+  en:{dir:"ltr", back:"← Back", title:"Checkout", product:"Product", price:"Price",
+      name:"Full name", phone:"Phone", city:"City", size:"Size", note:"Note (optional)",
+      confirm:"Confirm Order", sending:"Sending...", missing:"Please fill name, phone, and city.",
+      ok:"✅ Order sent. Check your Google Sheet.", fail:"❌ Failed to send. Try again."},
+  fr:{dir:"ltr", back:"← Retour", title:"Paiement", product:"Produit", price:"Prix",
+      name:"Nom complet", phone:"Téléphone", city:"Ville", size:"Taille", note:"Note (optionnel)",
+      confirm:"Confirmer la commande", sending:"Envoi...", missing:"Veuillez remplir nom, téléphone et ville.",
+      ok:"✅ Commande envoyée. Vérifie Google Sheet.", fail:"❌ Échec d’envoi. Réessaie."},
+  ar:{dir:"rtl", back:"← رجوع", title:"إتمام الطلب", product:"المنتج", price:"الثمن",
+      name:"الاسم الكامل", phone:"الهاتف", city:"المدينة", size:"المقاس", note:"ملاحظة (اختياري)",
+      confirm:"تأكيد الطلب", sending:"...جاري الإرسال", missing:"عفاك عمر الاسم والهاتف والمدينة.",
+      ok:"✅ تم إرسال الطلب. شوف Google Sheet.", fail:"❌ فشل الإرسال. عاود."}
+};
 
-if(!name||!phone||!city){
-document.getElementById("msg").innerText="Fill all fields"
-return
+/* ====== PRODUCTS ====== */
+const PRODUCTS = {
+  hoodie:{ usd:60, name:{en:"Parasite Hoodie", fr:"Hoodie Parasite", ar:"هودي باراسايت"} },
+  tshirt:{ usd:30, name:{en:"Parasite T-Shirt", fr:"T-shirt Parasite", ar:"تيشيرت باراسايت"} },
+  mask:{ usd:20,  name:{en:"Parasite Mask", fr:"Masque Parasite", ar:"قناع باراسايت"} }
+};
+
+function getParam(k){
+  return new URLSearchParams(location.search).get(k);
+}
+function getLang(){
+  const urlLang = getParam("lang");
+  const saved = localStorage.getItem("lang");
+  if(urlLang && T[urlLang]) return urlLang;
+  if(saved && T[saved]) return saved;
+  return "en";
+}
+function priceText(lang, usd){
+  if(lang === "ar") return `${Math.round(usd * USD_TO_MAD)} د.م`;
+  return `$${usd}`;
+}
+function setMsg(s){ document.getElementById("msg").innerText = s || ""; }
+
+/* ====== INIT ====== */
+const lang = getLang();
+localStorage.setItem("lang", lang);
+
+const tr = T[lang];
+document.documentElement.dir = tr.dir;
+document.documentElement.lang = lang;
+
+document.getElementById("langLabel").innerText = `Lang: ${lang.toUpperCase()}`;
+document.getElementById("backLink").innerText = tr.back;
+document.getElementById("backLink").href = `index.html?lang=${encodeURIComponent(lang)}`;
+
+document.getElementById("title").innerText = tr.title;
+document.getElementById("lblName").innerText = tr.name;
+document.getElementById("lblPhone").innerText = tr.phone;
+document.getElementById("lblCity").innerText = tr.city;
+document.getElementById("lblSize").innerText = tr.size;
+document.getElementById("lblNote").innerText = tr.note;
+
+const item = (getParam("item") || "hoodie").toLowerCase();
+const p = PRODUCTS[item] || PRODUCTS.hoodie;
+
+document.getElementById("productLine").innerText = `${tr.product}: ${p.name[lang] || p.name.en}`;
+document.getElementById("priceLine").innerText = `${tr.price}: ${priceText(lang, p.usd)}`;
+
+const btn = document.getElementById("confirmBtn");
+btn.innerText = tr.confirm;
+
+/* ====== SEND (IMPORTANT FIX) ======
+   Use mode:no-cors + Content-Type:text/plain to avoid browser CORS block on GitHub Pages.
+*/
+async function sendOrder(payload){
+  await fetch(WEBAPP_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
 }
 
-let data={
-name:name,
-phone:phone,
-city:city,
-size:size,
-note:note,
-productName:"Parasite product",
-price:"$30",
-lang:"en",
-item:"tshirt"
-}
+/* ====== CLICK ====== */
+btn.addEventListener("click", async () => {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const city = document.getElementById("city").value.trim();
+  const size = document.getElementById("size").value;
+  const note = document.getElementById("note").value.trim() || "-";
 
-fetch(WEBAPP_URL,{
-method:"POST",
-body:JSON.stringify(data)
-})
+  if(!name || !phone || !city){
+    setMsg(tr.missing);
+    return;
+  }
 
-document.getElementById("msg").innerText="Order sent ✅"
+  btn.disabled = true;
+  setMsg(tr.sending);
 
-}
+  const payload = {
+    lang,
+    item,
+    productName: (p.name[lang] || p.name.en),
+    price: priceText(lang, p.usd),
+    size,
+    name,
+    phone,
+    city,
+    note,
+    source: "github-pages"
+  };
+
+  try{
+    await sendOrder(payload);
+    setMsg(tr.ok);
+  }catch(e){
+    setMsg(tr.fail);
+    btn.disabled = false;
+  }
+});
 </script>
-
 </body>
 </html>
