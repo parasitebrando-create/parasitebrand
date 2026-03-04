@@ -3,336 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout • PARASITE</title>
+<title>Checkout</title>
 
 <style>
-:root{
-  --bg:#050505;
-  --text:#f2f2f2;
-  --muted:#a0a0a0;
-  --blood:#ff1a1a;
-  --line:rgba(255,255,255,0.10);
-}
-*{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  color:var(--text);
-  background:var(--bg);
-  min-height:100vh;
-  overflow-x:hidden;
+background:black;
+color:white;
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
-
-/* animated background (red + black) */
-body::before{
-  content:"";
-  position:fixed;
-  inset:-220px;
-  background:
-    radial-gradient(600px 420px at 20% 30%, rgba(255,26,26,0.22), transparent 60%),
-    radial-gradient(520px 380px at 75% 70%, rgba(255,26,26,0.18), transparent 58%),
-    radial-gradient(900px 700px at 50% 50%, rgba(255,255,255,0.04), transparent 65%);
-  animation: movebg 12s ease-in-out infinite alternate;
-  z-index:-2;
-}
-@keyframes movebg{ 0%{transform:translate(0,0)} 100%{transform:translate(-120px,-90px)} }
-
-/* subtle noise */
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-  mix-blend-mode:overlay;
-  opacity:.30;
-  z-index:-1;
-}
-
-.wrap{
-  width:min(720px, 92vw);
-  margin:auto;
-  padding:24px 0 48px;
-}
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-  font-size:12px;
-  color:var(--muted);
-}
-a{ color:var(--muted); text-decoration:none; }
-a:hover{ color:var(--text); }
 
 .card{
-  background:rgba(15,15,15,0.78);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:16px;
-  backdrop-filter: blur(6px);
+background:#111;
+padding:30px;
+border-radius:10px;
+width:350px;
 }
-h1{ margin:0 0 6px; font-size:24px; letter-spacing:1px; }
-.muted{ color:var(--muted); font-size:13px; }
-.price{ margin-top:6px; font-weight:800; font-size:14px; }
-
-.row{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-@media(max-width:650px){ .row{ grid-template-columns:1fr; } }
-
-label{ display:block; margin-top:10px; font-size:12px; color:var(--muted); }
 
 input,select{
-  width:100%;
-  margin-top:5px;
-  padding:8px 10px;
-  border-radius:9px;
-  border:1px solid var(--line);
-  background:#0b0b0b;
-  color:#fff;
-  font-size:13px;
-  outline:none;
-}
-input:focus,select:focus{
-  border-color:rgba(255,26,26,0.45);
-  box-shadow:0 0 0 3px rgba(255,26,26,0.10);
+width:100%;
+padding:10px;
+margin-top:10px;
+background:#222;
+border:none;
+color:white;
 }
 
-.btn{
-  margin-top:14px;
-  width:100%;
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid rgba(255,26,26,0.55);
-  background:rgba(255,26,26,0.16);
-  color:#fff;
-  font-weight:900;
-  cursor:pointer;
-  transition:.25s;
-}
-.btn:hover{ background:rgba(255,26,26,0.30); }
-.btn:disabled{ opacity:.6; cursor:not-allowed; }
-
-.status{
-  margin-top:10px;
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.5;
+button{
+margin-top:15px;
+width:100%;
+padding:12px;
+background:red;
+border:none;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
-/* RTL */
-html[dir="rtl"] body{ direction:rtl; }
-html[dir="rtl"] .top{ flex-direction:row-reverse; }
+button:hover{
+background:#ff2020;
+}
 </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="top">
-    <span id="langLabel"></span>
-    <a id="backLink" href="index.html">← Back</a>
-  </div>
 
-  <div class="card">
-    <h1 id="title">Checkout</h1>
-    <p class="muted" id="productLine"></p>
-    <p class="price" id="priceLine"></p>
+<div class="card">
 
-    <div class="row">
-      <div>
-        <label id="lblName" for="name">Full name</label>
-        <input id="name" type="text" placeholder="Your name" autocomplete="name">
-      </div>
-      <div>
-        <label id="lblPhone" for="phone">Phone</label>
-        <input id="phone" type="tel" placeholder="+212..." autocomplete="tel">
-      </div>
-    </div>
+<h2>Checkout</h2>
 
-    <div class="row">
-      <div>
-        <label id="lblCity" for="city">City</label>
-        <input id="city" type="text" placeholder="Casablanca...">
-      </div>
-      <div>
-        <label id="lblSize" for="size">Size</label>
-        <select id="size">
-          <option value="S">S</option>
-          <option value="M" selected>M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-        </select>
-      </div>
-    </div>
+<input id="name" placeholder="Full name">
+<input id="phone" placeholder="Phone">
+<input id="city" placeholder="City">
 
-    <label id="lblNote" for="note">Note (optional)</label>
-    <input id="note" type="text" placeholder="Color / delivery note...">
+<select id="size">
+<option>S</option>
+<option>M</option>
+<option>L</option>
+<option>XL</option>
+</select>
 
-    <button class="btn" id="confirmBtn" type="button">Confirm Order</button>
-    <div class="status" id="status"></div>
-  </div>
+<input id="note" placeholder="Note (optional)">
+
+<button onclick="sendOrder()">Confirm Order</button>
+
+<p id="msg"></p>
+
 </div>
 
 <script>
-/* ========= CONFIG ========= */
-  const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwv0WXKwxy4tUYtpz0ymVYXDt4y3Mqekkue2ygq8EJhDqRMBC6qM37xNvg9YPj7v71t/exec";
-  const USD_TO_MAD = 10;
 
-/* ========= I18N ========= */
-const TEXT = {
-  en:{
-    dir:"ltr",
-    back:"← Back",
-    title:"Checkout",
-    product:"Product",
-    price:"Price",
-    fullName:"Full name",
-    phone:"Phone",
-    city:"City",
-    size:"Size",
-    note:"Note (optional)",
-    confirm:"Confirm Order",
-    sending:"Sending...",
-    missing:"Please fill name, phone, and city.",
-    ok:"✅ Order sent successfully.",
-    fail:(msg)=>`❌ Error: ${msg}`
-  },
-  fr:{
-    dir:"ltr",
-    back:"← Retour",
-    title:"Paiement",
-    product:"Produit",
-    price:"Prix",
-    fullName:"Nom complet",
-    phone:"Téléphone",
-    city:"Ville",
-    size:"Taille",
-    note:"Note (optionnel)",
-    confirm:"Confirmer la commande",
-    sending:"Envoi en cours...",
-    missing:"Veuillez remplir nom, téléphone et ville.",
-    ok:"✅ Commande envoyée.",
-    fail:(msg)=>`❌ Erreur: ${msg}`
-  },
-  ar:{
-    dir:"rtl",
-    back:"← رجوع",
-    title:"إتمام الطلب",
-    product:"المنتج",
-    price:"الثمن",
-    fullName:"الاسم الكامل",
-    phone:"الهاتف",
-    city:"المدينة",
-    size:"المقاس",
-    note:"ملاحظة (اختياري)",
-    confirm:"تأكيد الطلب",
-    sending:"...جاري إرسال الطلب",
-    missing:"عفاك عمر الاسم والهاتف والمدينة.",
-    ok:"✅ تم إرسال الطلب بنجاح.",
-    fail:(msg)=>`❌ خطأ: ${msg}`
-  }
-};
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwv0WXKwxy4tUYtpz0ymVYXDt4y3Mqekkue2ygq8EJhDqRMBC6qM37xNvg9YPj7v71t/exec";
 
-/* ========= PRODUCTS ========= */
-const PRODUCTS = {
-  hoodie:{ usd:60, name:{en:"Parasite Hoodie", fr:"Hoodie Parasite", ar:"هودي باراسايت"} },
-  tshirt:{ usd:30, name:{en:"Parasite T-Shirt", fr:"T-shirt Parasite", ar:"تيشيرت باراسايت"} },
-  mask:{ usd:20,  name:{en:"Parasite Mask", fr:"Masque Parasite", ar:"قناع باراسايت"} }
-};
+function sendOrder(){
 
-function formatPrice(lang, usd){
-  if(lang === "ar") return `${Math.round(usd * USD_TO_MAD)} د.م`;
-  return `$${usd}`;
-}
-function getLang(){
-  const params = new URLSearchParams(location.search);
-  const urlLang = params.get("lang");
-  const saved = localStorage.getItem("lang");
-  if(urlLang && TEXT[urlLang]) return urlLang;
-  if(saved && TEXT[saved]) return saved;
-  return "en";
-}
-function setStatus(msg){ document.getElementById("status").innerText = msg || ""; }
+let name=document.getElementById("name").value
+let phone=document.getElementById("phone").value
+let city=document.getElementById("city").value
+let size=document.getElementById("size").value
+let note=document.getElementById("note").value
 
-/* ✅ no-cors: كيوصل الطلب للـ Sheet بلا مشاكل CORS */
-async function sendToSheet(payload){
-  await fetch(SHEET_WEBAPP_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
-  return { ok: true };
+if(!name||!phone||!city){
+document.getElementById("msg").innerText="Fill all fields"
+return
 }
 
-/* ========= INIT ========= */
-const params = new URLSearchParams(location.search);
-const item = params.get("item") || "hoodie";
+let data={
+name:name,
+phone:phone,
+city:city,
+size:size,
+note:note,
+productName:"Parasite product",
+price:"$30",
+lang:"en",
+item:"tshirt"
+}
 
-const lang = getLang();
-localStorage.setItem("lang", lang);
+fetch(WEBAPP_URL,{
+method:"POST",
+body:JSON.stringify(data)
+})
 
-document.documentElement.dir = TEXT[lang].dir;
-document.documentElement.lang = (lang === "ar") ? "ar" : (lang === "fr") ? "fr" : "en";
+document.getElementById("msg").innerText="Order sent ✅"
 
-const tr = TEXT[lang];
-const p = PRODUCTS[item] || PRODUCTS.hoodie;
-
-document.getElementById("langLabel").innerText = `Lang: ${lang.toUpperCase()}`;
-document.getElementById("backLink").innerText = tr.back;
-document.getElementById("backLink").href = `index.html?lang=${encodeURIComponent(lang)}`;
-
-document.getElementById("title").innerText = tr.title;
-document.getElementById("productLine").innerText = `${tr.product}: ${p.name[lang] || p.name.en}`;
-document.getElementById("priceLine").innerText = `${tr.price}: ${formatPrice(lang, p.usd)}`;
-
-document.getElementById("lblName").innerText = tr.fullName;
-document.getElementById("lblPhone").innerText = tr.phone;
-document.getElementById("lblCity").innerText = tr.city;
-document.getElementById("lblSize").innerText = tr.size;
-document.getElementById("lblNote").innerText = tr.note;
-
-const btn = document.getElementById("confirmBtn");
-btn.innerText = tr.confirm;
-
-/* ========= SUBMIT ========= */
-btn.addEventListener("click", async () => {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const size = document.getElementById("size").value;
-  const note = document.getElementById("note").value.trim() || "-";
-
-  if(!name || !phone || !city){
-    setStatus(tr.missing);
-    return;
-  }
-
-  btn.disabled = true;
-  setStatus(tr.sending);
-
-  const payload = {
-    lang,
-    item,
-    productName: (p.name[lang] || p.name.en),
-    price: formatPrice(lang, p.usd),
-    size,
-    name,
-    phone,
-    city,
-    note,
-    source: "github-pages"
-  };
-
-  try{
-    await sendToSheet(payload);
-    setStatus(tr.ok);
-  }catch(e){
-    setStatus(tr.fail(e.message));
-    btn.disabled = false;
-  }
-});
+}
 </script>
+
 </body>
 </html>
-
