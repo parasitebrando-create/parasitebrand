@@ -1,2 +1,0 @@
-# parasitebrand
-Parasite streetwear store
