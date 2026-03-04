@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout • PARASITE</title>
+
+<style>
+:root{
+  --bg:#050505;
+  --card:#0c0c0c;
+  --text:#f2f2f2;
+  --muted:#a0a0a0;
+  --blood:#ff1a1a;
+  --line:rgba(255,255,255,0.10);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* animated background (red + black) */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-220px;
+  background:
+    radial-gradient(600px 420px at 20% 30%, rgba(255,26,26,0.22), transparent 60%),
+    radial-gradient(520px 380px at 75% 70%, rgba(255,26,26,0.18), transparent 58%),
+    radial-gradient(900px 700px at 50% 50%, rgba(255,255,255,0.04), transparent 65%);
+  animation: movebg 12s ease-in-out infinite alternate;
+  z-index:-2;
+}
+
+@keyframes movebg{
+  0%   { transform: translate(0px, 0px) }
+  100% { transform: translate(-120px, -90px) }
+}
+
+/* subtle noise */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+  opacity:.30;
+  z-index:-1;
+}
+
+.wrap{
+  width:min(720px, 92vw);
+  margin:auto;
+  padding:24px 0 48px;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+a{ color:var(--muted); text-decoration:none; }
+a:hover{ color:var(--text); }
+
+.card{
+  background:rgba(15,15,15,0.78);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  backdrop-filter: blur(6px);
+}
+
+h1{
+  margin:0 0 6px;
+  font-size:24px;
+  letter-spacing:1px;
+}
+
+.muted{ color:var(--muted); font-size:13px; }
+.price{ margin-top:6px; font-weight:800; font-size:14px; }
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+@media(max-width:650px){
+  .row{ grid-template-columns:1fr; }
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+input,select{
+  width:100%;
+  margin-top:5px;
+  padding:8px 10px;
+  border-radius:9px;
+  border:1px solid var(--line);
+  background:#0b0b0b;
+  color:#fff;
+  font-size:13px;
+  outline:none;
+}
+
+input:focus, select:focus{
+  border-color: rgba(255,26,26,0.45);
+  box-shadow: 0 0 0 3px rgba(255,26,26,0.10);
+}
+
+.btn{
+  margin-top:14px;
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,26,26,0.55);
+  background:rgba(255,26,26,0.16);
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.btn:hover{ background:rgba(255,26,26,0.30); }
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+.status{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+/* RTL */
+html[dir="rtl"] body{ direction:rtl; }
+html[dir="rtl"] .top{ flex-direction:row-reverse; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <span id="langLabel"></span>
+    <a id="backLink" href="index.html">← Back</a>
+  </div>
+
+  <div class="card">
+    <h1 id="title">Checkout</h1>
+
+    <p class="muted" id="productLine"></p>
+    <p class="price" id="priceLine"></p>
+
+    <div class="row">
+      <div>
+        <label id="lblName" for="name">Full name</label>
+        <input id="name" type="text" placeholder="Your name" autocomplete="name">
+      </div>
+      <div>
+        <label id="lblPhone" for="phone">Phone</label>
+        <input id="phone" type="tel" placeholder="+212..." autocomplete="tel">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label id="lblCity" for="city">City</label>
+        <input id="city" type="text" placeholder="Casablanca...">
+      </div>
+      <div>
+        <label id="lblSize" for="size">Size</label>
+        <select id="size">
+          <option value="S">S</option>
+          <option value="M" selected>M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+        </select>
+      </div>
+    </div>
+
+    <label id="lblNote" for="note">Note (optional)</label>
+    <input id="note" type="text" placeholder="Color / delivery note...">
+
+    <button class="btn" id="confirmBtn" type="button">Confirm Order</button>
+
+    <div class="status" id="status"></div>
+  </div>
+</div>
+
+<script>
+/* ========= CONFIG ========= */
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyF5QR-faOSYuWllF5sbimMVTb1b2Qk3RBx8SDZ238vffi6LatBSUvU6sr2a3syznHG/exec";
+
+/* ✅ rate: 1$ = 10 MAD (بدّلها كيف بغيتي) */
+const USD_TO_MAD = 10;
+
+/* ========= I18N ========= */
+const TEXT = {
+  en:{
+    dir:"ltr",
+    back:"← Back",
+    title:"Checkout",
+    product:"Product",
+    price:"Price",
+    fullName:"Full name",
+    phone:"Phone",
+    city:"City",
+    size:"Size",
+    note:"Note (optional)",
+    confirm:"Confirm Order",
+    sending:"Sending...",
+    missing:"Please fill name, phone, and city.",
+    ok:(id)=>`✅ Order sent successfully. Order ID: ${id}`,
+    fail:(msg)=>`❌ Error: ${msg}`
+  },
+  fr:{
+    dir:"ltr",
+    back:"← Retour",
+    title:"Paiement",
+    product:"Produit",
+    price:"Prix",
+    fullName:"Nom complet",
+    phone:"Téléphone",
+    city:"Ville",
+    size:"Taille",
+    note:"Note (optionnel)",
+    confirm:"Confirmer la commande",
+    sending:"Envoi en cours...",
+    missing:"Veuillez remplir nom, téléphone et ville.",
+    ok:(id)=>`✅ Commande envoyée. ID: ${id}`,
+    fail:(msg)=>`❌ Erreur: ${msg}`
+  },
+  ar:{
+    dir:"rtl",
+    back:"← رجوع",
+    title:"إتمام الطلب",
+    product:"المنتج",
+    price:"الثمن",
+    fullName:"الاسم الكامل",
+    phone:"الهاتف",
+    city:"المدينة",
+    size:"المقاس",
+    note:"ملاحظة (اختياري)",
+    confirm:"تأكيد الطلب",
+    sending:"...جاري إرسال الطلب",
+    missing:"عفاك عمر الاسم والهاتف والمدينة.",
+    ok:(id)=>`✅ تم إرسال الطلب بنجاح. رقم الطلب: ${id}`,
+    fail:(msg)=>`❌ خطأ: ${msg}`
+  }
+};
+
+/* ========= PRODUCTS ========= */
+const PRODUCTS = {
+  hoodie:{ usd:60, name:{en:"Parasite Hoodie", fr:"Hoodie Parasite", ar:"هودي باراسايت"} },
+  tshirt:{ usd:30, name:{en:"Parasite T-Shirt", fr:"T-shirt Parasite", ar:"تيشيرت باراسايت"} },
+  mask:{ usd:20,  name:{en:"Parasite Mask", fr:"Masque Parasite", ar:"قناع باراسايت"} }
+};
+
+function formatPrice(lang, usd){
+  if(lang === "ar") return `${Math.round(usd * USD_TO_MAD)} د.م`;
+  return `$${usd}`;
+}
+
+function getLang(){
+  const params = new URLSearchParams(location.search);
+  const urlLang = params.get("lang");
+  const saved = localStorage.getItem("lang");
+  if(urlLang && TEXT[urlLang]) return urlLang;
+  if(saved && TEXT[saved]) return saved;
+  return "en";
+}
+
+function setStatus(msg){
+  document.getElementById("status").innerText = msg || "";
+}
+
+async function sendToSheet(payload){
+  // Important: Apps Script sometimes prefers text/plain
+  const res = await fetch(SHEET_WEBAPP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+
+  // if not JSON, this will throw and we show an error
+  return await res.json();
+}
+
+/* ========= INIT ========= */
+const params = new URLSearchParams(location.search);
+const item = params.get("item") || "hoodie";
+
+const lang = getLang();
+localStorage.setItem("lang", lang);
+
+document.documentElement.dir = TEXT[lang].dir;
+document.documentElement.lang = (lang === "ar") ? "ar" : (lang === "fr") ? "fr" : "en";
+
+const tr = TEXT[lang];
+const p = PRODUCTS[item] || PRODUCTS.hoodie;
+
+document.getElementById("langLabel").innerText = `Lang: ${lang.toUpperCase()}`;
+document.getElementById("backLink").innerText = tr.back;
+document.getElementById("backLink").href = `index.html?lang=${encodeURIComponent(lang)}`;
+
+document.getElementById("title").innerText = tr.title;
+document.getElementById("productLine").innerText = `${tr.product}: ${p.name[lang] || p.name.en}`;
+document.getElementById("priceLine").innerText = `${tr.price}: ${formatPrice(lang, p.usd)}`;
+
+document.getElementById("lblName").innerText = tr.fullName;
+document.getElementById("lblPhone").innerText = tr.phone;
+document.getElementById("lblCity").innerText = tr.city;
+document.getElementById("lblSize").innerText = tr.size;
+document.getElementById("lblNote").innerText = tr.note;
+
+const btn = document.getElementById("confirmBtn");
+btn.innerText = tr.confirm;
+
+/* ========= SUBMIT ========= */
+btn.addEventListener("click", async () => {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const city = document.getElementById("city").value.trim();
+  const size = document.getElementById("size").value;
+  const note = document.getElementById("note").value.trim() || "-";
+
+  if(!name || !phone || !city){
+    setStatus(tr.missing);
+    return;
+  }
+
+  btn.disabled = true;
+  setStatus(tr.sending);
+
+  const payload = {
+    lang,
+    item,
+    productName: (p.name[lang] || p.name.en),
+    price: formatPrice(lang, p.usd),
+    size,
+    name,
+    phone,
+    city,
+    note
+  };
+
+  try{
+    const out = await sendToSheet(payload);
+
+    // expect: { result:"success", order_id:"ORD-..." } OR { ok:true, order_id:... }
+    const orderId = out.order_id || out.orderId || out.id || out?.data?.order_id;
+
+    if(out && (out.result === "success" || out.ok === true)){
+      setStatus(tr.ok(orderId || "ORD"));
+    }else{
+      throw new Error(out?.error || out?.message || "Server did not return success");
+    }
+
+  }catch(e){
+    setStatus(tr.fail(e.message));
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
