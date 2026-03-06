@@ -17,6 +17,10 @@
 
 *{box-sizing:border-box}
 
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   font-family: Arial, Helvetica, sans-serif;
@@ -68,9 +72,10 @@ body::before{
 /* glitch effect */
 .brand::before,
 .brand::after{
-  content:"PARASITE";
+  content: attr(data-text);
   position:absolute;
-  left:0; top:0;
+  left:0;
+  top:0;
   opacity:.7;
   clip-path: inset(0 0 0 0);
 }
@@ -107,6 +112,7 @@ body::before{
   padding:8px 10px;
   border-radius:10px;
   border:1px solid transparent;
+  transition:all .25s ease;
 }
 .menu a:hover{
   color:var(--text);
@@ -128,6 +134,7 @@ body::before{
   cursor:pointer;
   font-weight:700;
   font-size:12px;
+  transition:all .25s ease;
 }
 .lang button:hover{
   color:var(--text);
@@ -162,6 +169,12 @@ body::before{
   line-height:1.6;
 }
 
+.hero-cta{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+}
+
 /* grid */
 .grid{
   margin-top:22px;
@@ -178,6 +191,13 @@ body::before{
   text-align:left;
   position:relative;
   overflow:hidden;
+  transition:all .25s ease;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(255,26,26,0.28);
+  box-shadow:0 12px 30px rgba(0,0,0,0.25);
 }
 
 .card::after{
@@ -241,6 +261,7 @@ body::before{
   color:var(--text);
   font-weight:800;
   cursor:pointer;
+  transition:all .25s ease;
 }
 .btn:hover{ background:rgba(255,26,26,0.22); }
 
@@ -253,6 +274,7 @@ body::before{
   color:var(--text);
   font-weight:700;
   cursor:pointer;
+  transition:all .25s ease;
 }
 .btn2:hover{ border-color:rgba(255,26,26,0.45); }
 
@@ -309,7 +331,8 @@ body::before{
 html[dir="rtl"] body{ direction:rtl; }
 html[dir="rtl"] .nav{ flex-direction:row-reverse; }
 html[dir="rtl"] .menu{ flex-direction:row-reverse; }
-html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
+html[dir="rtl"] .card,
+html[dir="rtl"] .box{ text-align:right; }
 
 /* responsive */
 @media (max-width:900px){
@@ -324,12 +347,12 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
   <div class="container">
 
     <div class="nav">
-      <div class="brand" id="brandTop">PARASITE</div>
+      <div class="brand" id="brandTop" data-text="PARASITE">PARASITE</div>
 
       <div class="menu">
-        <a href="#" id="navShop">Shop</a>
-        <a href="#" id="navDrops">Drops</a>
-        <a href="#" id="navContact">Contact</a>
+        <a href="#shop" id="navShop">Shop</a>
+        <a href="#drops" id="navDrops">Drops</a>
+        <a href="#contact" id="navContact">Contact</a>
 
         <div class="lang">
           <button id="btnEN" onclick="setLang('en')">EN</button>
@@ -339,12 +362,15 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       </div>
     </div>
 
-    <section class="hero">
+    <section class="hero" id="drops">
       <h1 id="title">PARASITE</h1>
       <p id="desc">Dark streetwear inspired by infection & glitch aesthetics. Black/white with a blood accent — clean but unsettling.</p>
+      <div class="hero-cta">
+        <button class="btn" id="heroBtn" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">SHOP NOW</button>
+      </div>
     </section>
 
-    <section class="grid">
+    <section class="grid" id="shop">
       <!-- HOODIE -->
       <div class="card" data-item="hoodie">
         <div class="thumb">
@@ -356,7 +382,7 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
         <div class="small" id="p1Note">Heavy cotton • limited drop</div>
         <div class="actions">
           <button class="btn buyBtn" id="buy1">BUY</button>
-          <button class="btn2" id="det1" onclick="alert('Details soon…')">DETAILS</button>
+          <button class="btn2" id="det1">DETAILS</button>
         </div>
       </div>
 
@@ -371,7 +397,7 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
         <div class="small" id="p2Note">Oversized fit • soft touch</div>
         <div class="actions">
           <button class="btn buyBtn" id="buy2">BUY</button>
-          <button class="btn2" id="det2" onclick="alert('Details soon…')">DETAILS</button>
+          <button class="btn2" id="det2">DETAILS</button>
         </div>
       </div>
 
@@ -386,12 +412,12 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
         <div class="small" id="p3Note">Minimal • horror vibe</div>
         <div class="actions">
           <button class="btn buyBtn" id="buy3">BUY</button>
-          <button class="btn2" id="det3" onclick="alert('Details soon…')">DETAILS</button>
+          <button class="btn2" id="det3">DETAILS</button>
         </div>
       </div>
     </section>
 
-    <section class="footer">
+    <section class="footer" id="contact">
       <div class="footer-grid">
 
         <div class="box">
@@ -406,7 +432,10 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
 
         <div class="box">
           <h4 id="fContactTitle">Contact</h4>
-          <p id="fContactText">IG: @parasite<br/>Email: parasite@gmail.com</p>
+          <p id="fContactText">
+            IG: <a href="https://instagram.com/parasitebrando" target="_blank">parasitebrando</a><br>
+            Email: <a href="mailto:parasitebrando@gamil.com">parasitebrando@gamil.com</a>
+          </p>
         </div>
 
       </div>
@@ -419,7 +448,6 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
   </div>
 
 <script>
-  // Year
   document.getElementById("year").textContent = new Date().getFullYear();
 
   const t = {
@@ -430,6 +458,7 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       navShop: "Shop",
       navDrops: "Drops",
       navContact: "Contact",
+      heroBtn: "SHOP NOW",
       thumb1: "HOODIE",
       thumb2: "T-SHIRT",
       thumb3: "MASK",
@@ -441,12 +470,13 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       p3Note: "Minimal • horror vibe",
       buy: "BUY",
       details: "DETAILS",
+      detailsMsg: "Details soon...",
       fAboutTitle: "About",
       fAboutText: "PARASITE — dark streetwear inspired by infection & glitch aesthetics. Limited drops only.",
       fShipTitle: "Shipping",
       fShipText: "Worldwide shipping • 24-72h processing • Tracking included.",
       fContactTitle: "Contact",
-      fContactText: "IG: @parasite<br/>Email: parasite@gmail.com"
+      fContactText: 'IG: <a href="https://instagram.com/parasitebrando" target="_blank">parasitebrando</a><br>Email: <a href="mailto:parasitebrando@gamil.com">parasitebrando@gamil.com</a>'
     },
     fr: {
       dir: "ltr",
@@ -455,6 +485,7 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       navShop: "Boutique",
       navDrops: "Drops",
       navContact: "Contact",
+      heroBtn: "ACHETER",
       thumb1: "HOODIE",
       thumb2: "T-SHIRT",
       thumb3: "MASQUE",
@@ -466,20 +497,22 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       p3Note: "Minimal • vibe horror",
       buy: "ACHETER",
       details: "DÉTAILS",
+      detailsMsg: "Détails bientôt...",
       fAboutTitle: "À propos",
       fAboutText: "PARASITE — streetwear sombre inspiré par l'infection & le glitch. Drops limités.",
       fShipTitle: "Livraison",
       fShipText: "Livraison mondiale • préparation 24-72h • suivi inclus.",
       fContactTitle: "Contact",
-      fContactText: "IG : @parasite<br/>Email : parasite@gmail.com"
+      fContactText: 'IG : <a href="https://instagram.com/parasitebrando" target="_blank">parasitebrando</a><br>Email : <a href="mailto:parasitebrando@gamil.com">parasitebrando@gamil.com</a>'
     },
     ar: {
       dir: "rtl",
-      title: "باراسايت",
+      title: "PARASITE",
       desc: "ستايل ستريت وير مظلم مستوحى من العدوى وتأثيرات الغليتش. أبيض/أسود مع لمسة حمراء — نظيف لكنه مُقلق.",
       navShop: "المتجر",
       navDrops: "دروب",
       navContact: "تواصل",
+      heroBtn: "تسوق الآن",
       thumb1: "هودي",
       thumb2: "تيشيرت",
       thumb3: "قناع",
@@ -491,12 +524,13 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
       p3Note: "بسيط • طابع رعب",
       buy: "شراء",
       details: "تفاصيل",
+      detailsMsg: "التفاصيل قريباً...",
       fAboutTitle: "حول",
-      fAboutText: "باراسايت — ستريت وير مظلم مستوحى من العدوى والغليتش. إصدارات محدودة فقط.",
+      fAboutText: "PARASITE — ستريت وير مظلم مستوحى من العدوى والغليتش. إصدارات محدودة فقط.",
       fShipTitle: "الشحن",
       fShipText: "شحن عالمي • تجهيز 24-72 ساعة • تتبع متوفر.",
       fContactTitle: "تواصل",
-      fContactText: "انستغرام: @parasite<br/>البريد: parasite@gmail.com"
+      fContactText: 'انستغرام: <a href="https://instagram.com/parasitebrando" target="_blank">parasitebrando</a><br>البريد: <a href="mailto:parasitebrando@gamil.com">parasitebrando@gamil.com</a>'
     }
   };
 
@@ -506,7 +540,7 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
     document.getElementById("btnAR").classList.toggle("active", lang==="ar");
   }
 
-  // ✅ BUY buttons -> checkout.html?item=...&lang=...
+  // KEEP SAME CHECKOUT LOGIC
   function wireBuyButtons(lang){
     document.querySelectorAll(".buyBtn").forEach(btn => {
       btn.onclick = () => {
@@ -524,16 +558,22 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
     document.documentElement.lang = (lang === "ar") ? "ar" : (lang === "fr" ? "fr" : "en");
     document.documentElement.dir = d.dir;
 
-    document.getElementById("title").innerText = d.title;
-    document.getElementById("brandTop").innerText = "PARASITE";
+    // PARASITE stays fixed
+    document.getElementById("title").innerText = "PARASITE";
+
+    const brandTop = document.getElementById("brandTop");
+    brandTop.innerText = "PARASITE";
+    brandTop.setAttribute("data-text", "PARASITE");
+
     document.getElementById("brandBottom").innerText = "PARASITE";
+
     document.getElementById("desc").innerText = d.desc;
 
     document.getElementById("navShop").innerText = d.navShop;
     document.getElementById("navDrops").innerText = d.navDrops;
     document.getElementById("navContact").innerText = d.navContact;
+    document.getElementById("heroBtn").innerText = d.heroBtn;
 
-    // fallback labels (if images fail)
     document.getElementById("thumb1").innerText = d.thumb1;
     document.getElementById("thumb2").innerText = d.thumb2;
     document.getElementById("thumb3").innerText = d.thumb3;
@@ -554,6 +594,10 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
     document.getElementById("det2").innerText = d.details;
     document.getElementById("det3").innerText = d.details;
 
+    document.getElementById("det1").onclick = () => alert(d.detailsMsg);
+    document.getElementById("det2").onclick = () => alert(d.detailsMsg);
+    document.getElementById("det3").onclick = () => alert(d.detailsMsg);
+
     document.getElementById("fAboutTitle").innerText = d.fAboutTitle;
     document.getElementById("fAboutText").innerText = d.fAboutText;
 
@@ -568,7 +612,6 @@ html[dir="rtl"] .card, html[dir="rtl"] .box{ text-align:right; }
     localStorage.setItem("lang", lang);
   }
 
-  // Default language (URL > localStorage > en)
   const urlLang = new URLSearchParams(location.search).get("lang");
   const saved = localStorage.getItem("lang") || "en";
   const startLang = (urlLang && t[urlLang]) ? urlLang : saved;
